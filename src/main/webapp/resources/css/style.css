@@ -1,0 +1,70 @@
+@charset "EUC-KR";
+
+body{
+	margin: auto;
+}
+
+#container{
+	margin: auto;
+	width: 99%;
+	text-align:center;
+	font-family: "µ¸¿ò", dotum, "±¼¸²", gulim, arial, helvetica, sans-serif;
+}
+#head{
+	margin: auto;
+	padding: 20px;
+	border: 20px;
+	width:100%;
+	background-color:#80ff00;
+	text-align:center;
+	font-family: "µ¸¿ò", dotum, "±¼¸²", gulim, arial, helvetica, sans-serif;
+}
+#menu{
+	margin: auto;
+	width:100%;
+	background-color:#80ff00;
+	text-align:center;
+	font-family: "µ¸¿ò", dotum, "±¼¸²", gulim, arial, helvetica, sans-serif;
+}
+.content{
+	margin: auto;
+	width:35%;
+	float:left;
+	background-color:none;
+	text-align:center;
+	font-family: "µ¸¿ò", dotum, "±¼¸²", gulim, arial, helvetica, sans-serif;
+}
+
+
+#content_2{
+	margin: auto;
+	float:left;
+	width:65%;
+	background-image:url("main_recommand.jpg");
+	background-size: cover;
+	height:600px;
+	text-align:center;
+}
+#content_2.mainRecommand{
+	width:50%;
+}
+
+#nav{margin:0; padding:0; list-style:none;display:inline;} 
+#nav li {display:inline;}
+#nav, #toggle {display:none;} 
+#toggle:checked + #nav{display: inline;}
+
+/*-----------------viewProduct.jsp---------------------*/
+
+#imgBook{
+	margin: auto;
+	width:40%;
+	float:left;
+	background-color:red;
+}
+#viewBook{
+	margin: auto;
+	width:60%;
+	float:left;
+	background-color:blue;
+}

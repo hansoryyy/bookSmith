@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smith.book.model.SaleMapper">
+
+	<select id="orderTotalPage" resultType="int">
+		select count(*) from moon.order
+	</select>
+	
+	<select id="orderList" parameterType="java.util.Map" resultType="OrderDTO">
+		${sql}
+	</select>
+	
+	<select id="orderSearch" parameterType="java.util.Map" resultType="OrderDTO">
+		${sql}
+	</select>
+   
+   <select id="orderStatus" parameterType="int" resultType="OrderDTO">
+      select a.bookname, a.img_name, b.order_code, c.order_item_code, b.member_id, b.guest_email, b.name, b.tel, b.zipcode, b.addr1, 
+      b.addr2, b.order_date, b.message, b.payment_option, b.`status`, b.delivery_company, b.delivery_code, c.qty, c.each_price 
+      from book a inner join moon.order b inner join order_item c on b.order_code = #{order_code} group by b.order_code
+   </select>
+   
+   <select id="orderProduct" parameterType="int" resultType="OrderDTO">
+      select b.img_name, b.bookname, a.order_item_code, a.`status`, a.qty, b.price, a.each_price from order_item a 
+      join book b on a.book_code = b.book_code where order_code=#{order_code};
+   </select>
+   
+   <update id="orderProductModify" parameterType="java.util.Map">
+      ${sql}
+   </update>
+   
+   <update id="orderAddrModify" parameterType="OrderDTO">
+      update moon.order set name = #{name}, tel = #{tel}, zipcode = #{zipcode}, addr1 = #{addr1}, 
+      addr2 = #{addr2}, guest_email = #{guest_email}, message = #{message} where order_code = #{order_code}
+   </update>
+   
+   <update id="paymentStatusModify" parameterType="OrderDTO">
+      update moon.order set delivery_code = #{delivery_code}, delivery_company = #{delivery_company},
+      order_date = #{order_date} where order_code = #{order_code}
+   </update>
+   
+   <select id="saleToday" parameterType="String" resultType="OrderDTO">
+		select o.order_code,o.member_id,o.name,sum(each_price) as money
+		from `order` as o,order_item as i 
+		where #{order_date} = DATE_FORMAT(i.sales_date,'%Y%m%d') and o.order_code = i.order_code
+		group by i.order_code
+		order by o.order_code desc
+	</select>
+	
+	<select id="saleDate" parameterType="map" resultType="OrderDTO">
+		select DATE_FORMAT(i.sales_date,'%Y-%m-%d') as date,sum(qty) as qty,sum(each_price) as money
+		from `order` as o,order_item as i 
+		where  DATE_FORMAT(i.sales_date,'%Y%m%d') between #{fr_date} and #{to_date}
+		and o.order_code = i.order_code 
+		group by DATE_FORMAT(i.sales_date,'%Y%m%d')
+		order by i.sales_date desc
+	</select>
+	
+	<select id="saleMonth" parameterType="java.util.Map" resultType="OrderDTO">
+		select DATE_FORMAT(i.sales_date,'%Y-%m') as date,sum(qty) as qty,sum(each_price) as money
+		from `order` as o,order_item as i 
+		where  DATE_FORMAT(i.sales_date,'%Y%m') between #{fr_month} and #{to_month}
+		and o.order_code = i.order_code 
+		group by DATE_FORMAT(i.sales_date,'%Y%m')
+		order by i.sales_date desc
+	</select>
+	
+	<select id="saleYear" parameterType="java.util.Map" resultType="OrderDTO">
+		select DATE_FORMAT(i.sales_date,'%Y') as date,sum(qty) as qty,sum(each_price) as money
+		from `order` as o,order_item as i 
+		where  DATE_FORMAT(i.sales_date,'%Y') between #{fr_year} and #{to_year}
+		and o.order_code = i.order_code 
+		group by DATE_FORMAT(i.sales_date,'%Y')
+		order by i.sales_date desc
+	</select>
+	
+	<select id="itemRankFindAll" parameterType="java.util.Map" resultType="BookDTO">
+      select distinct  b.img_name,b.bookname,
+      b.book_code,sum(i.qty) as saleCount,i.each_price,b.readCount,
+      sum(i.qty) * b.price as price
+      from `order` as o,order_item as i ,book as b 
+      where o.order_code = i.order_code and b.book_code = i.book_code
+         and i.sales_date between #{fr_date} and #{to_date}+1
+      group by b.book_code
+      order by ${type} desc 
+   </select> 
+   
+   <select id="itemRankFind" parameterType="java.util.Map" resultType="BookDTO">
+      select distinct  b.img_name,b.bookname, 
+      b.book_code,sum(i.qty) as saleCount,i.each_price,b.readCount,
+      sum(i.qty) * b.price as price
+      from `order` as o,order_item as i ,book as b 
+      where o.order_code = i.order_code and b.book_code = i.book_code
+         and i.sales_date between #{fr_date} and #{to_date}+1
+         and g_code between #{g_code} and #{g_code}+999 
+      group by b.book_code
+      order by ${type} desc 
+   </select>  
+	
+
+
+
+
+</mapper>

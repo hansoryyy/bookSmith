@@ -1,0 +1,112 @@
+@charset "EUC-KR";
+* {
+    box-sizing: border-box;
+}
+hr{
+	border:none;
+}
+.con{
+    margin:0 auto;
+    float:center;
+    width:95%;
+}
+.header {
+    color: #971afd;
+    padding:0.1%;
+    width:100%;
+    background-color:green;
+}
+
+/* ------------------------------- */
+#mmCon{
+	display: flex;
+    width: 100%;
+}
+#Scon{
+	display: flex;
+    width: 96%;
+    float:left;
+}
+/* ------------------------------- */
+.menu {
+    width: 25%;
+    float: left;
+    text-align:center;
+    flex: 1;
+    background-color: red;
+}
+.menu img{
+    width: 50%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+/* ------------------------------- */
+.main {
+    width: 75%;
+    float: left;
+    flex: 1;
+    background-color: yellow;
+}
+/* ------------------------------- */
+.slider{
+	width: 20%;
+    text-align:center;
+    flex: 1;
+}
+.prev,.next{
+	text-align: center;
+	border:none;
+	float:left;
+	width:2%;
+}
+.prev,.next:hover{
+	backgroud-color:black;
+}
+.slider img{
+    width: 50%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    opacity:0.4;
+    animation-duration: 1s;
+  	animation-name: slideNext;
+}
+.slider img:hover{
+   opacity:1;
+}
+@keyframes slideNext {
+  from {
+    width:25%;
+  }
+
+  to {
+    width:50%;
+  }
+/* ------------------------------- */
+.footer {
+    background-color: #53C14B;
+    color: #ffffff;
+    padding:0.1%;
+    width:100%;
+}
+/* ------------------------------- */
+.searchBar{
+	width: 100%;
+    text-align:center;
+}
+/* ------------------------------- */
+.drop{
+    width: 25%;
+    float: left;
+    flex: 1;
+    background-color: purple;
+}
+.dropContent{
+	display:none;
+	position: absolute;
+}

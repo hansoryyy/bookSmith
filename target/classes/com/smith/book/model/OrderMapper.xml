@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smith.book.model.OrderMapper">
+
+	<insert id="addOrderItem" parameterType="OrderItemDTO">
+		INSERT INTO
+			order_item
+		(
+			order_code,
+			book_code,
+			qty,
+			each_price
+		)
+		VALUES
+		(
+			#{order_code},
+			#{book_code},
+			#{qty},
+			#{each_price}
+		)
+	</insert>
+	
+	
+
+	<insert id="addOrder" parameterType="OrderDTO"
+		keyProperty="order_code" keyColumn="order_code"
+		useGeneratedKeys="true">
+		INSERT INTO
+		moon.order
+		(
+	<if test="member_id != null">
+			member_id,
+	</if>
+			name,
+			tel,
+	<if test="guest_email != null || guest_passwd != null">
+			guest_email,
+			guest_passwd,
+	</if>
+			zipcode,
+			addr1,
+			addr2,
+			order_date,
+			message
+		)
+		VALUES
+		(
+	<if test="member_id != null">
+			#{member_id},
+	</if>
+			#{name},
+			#{tel},
+	<if test="guest_email != null || guest_passwd != null">
+			#{guest_email},
+			#{guest_passwd},
+	</if>
+			#{zipcode},
+			#{addr1},
+			#{addr2},
+			#{order_date},
+			#{message}
+		)
+	</insert>
+	
+	<select id="getGuestOrder" parameterType="OrderDTO" resultMap="resultOrder">
+		SELECT *, DATE_FORMAT(order_date, "%Y-%m-%d") as o_date FROM
+			moon.order
+		WHERE 
+			guest_email = #{guest_email}
+		AND
+			guest_passwd = #{guest_passwd}
+	</select>
+	
+	<resultMap id="resultOrder" type="com.smith.book.dto.OrderDTO">
+		<id property="order_code" column="order_code" />
+		<result property="member_id" column="member_id" />
+		<result property="guest_email" column="guest_eamil" />
+		<result property="guest_passwd" column="guest_passwd" />
+		<result property="name" column="name" />
+		<result property="tel" column="tel" />
+		<result property="zipcode" column="zipcode" />
+		<result property="addr1" column="addr1" />
+		<result property="addr2" column="addr2" />
+		<result property="order_date" column="order_date" />
+		<result property="o_date" column="o_date" />
+		<result property="message" column="message" />
+		<result property="bookname" column="bookname"/>
+		<collection property="items" 
+					column="order_code" 
+					javaType="java.util.ArrayList"
+					ofType="com.smith.book.dto.OrderItemDTO"
+					select="resultOrderItemDTO"/>
+	</resultMap>
+	
+	<select id="resultOrderItemDTO" resultMap="resultOrderItem">
+		SELECT
+			order_item_code,
+			order_code,
+			o.book_code,
+			o.qty,
+			each_price,
+			bookname,
+			img_name
+		FROM
+			order_item  as o
+		INNER JOIN
+			book as b
+		ON
+		(
+			o.book_code = b.book_code
+		)
+		WHERE
+			order_code = #{order_code}
+	</select>
+	
+	<resultMap id="resultOrderItem" type="com.smith.book.dto.OrderItemDTO">
+    	<result property="order_code" column="order_code"/>
+    	<result property="order_item_code" column="order_item_code"/>
+    	<result property="book_code" column="book_code"/>
+    	<result property="qty" column="qty"/>
+    	<result property="each_price" column="each_price"/>
+	</resultMap>
+	
+	<update id="updateQtySaleCount" parameterType="OrderItemDTO" >
+		UPDATE 
+			book 
+		SET 
+			qty = qty - #{qty},
+			saleCount = saleCount + #{qty} 
+		WHERE 
+			book_code = #{book_code}
+	</update>
+	
+	
+	
+
+</mapper>

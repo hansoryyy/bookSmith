@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smith.book.model.CartMapper">
+
+	<select id="getTotalPage" resultType="int">
+		select count(*) from mail
+	</select>
+	
+	<select id="mailUserList" parameterType="java.util.Map" resultType="MailDTO">
+		${sql}
+	</select>
+
+	<insert id="createMail" parameterType="MailDTO">
+		insert into mail (subject, content)
+		values(#{subject}, #{content})
+	</insert>
+
+	<delete id="deleteMail" parameterType="int">
+		delete from mail where mailcode = #{mailcode}
+	</delete>
+
+	<select id="getList" parameterType="int" resultType="MailDTO">
+		select * from mail where mailcode = #{mailcode}
+	</select>
+
+	<update id="updateMail" parameterType="mailDTO">
+		update mail set subject = #{subject}, content = #{content } where mailcode =
+		#{mailcode}
+	</update>
+
+	<select id="mailReceive" parameterType="String"
+		resultType="MemberDTO">
+		select email from member where mail = #{mail}
+	</select>
+
+
+
+
+
+</mapper>

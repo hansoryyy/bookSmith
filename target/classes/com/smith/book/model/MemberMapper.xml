@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.smith.book.model.MemberMapper">
+
+	<insert id="joinMember" parameterType="MemberDTO" >
+       insert into member(id,name,passwd,email,hp1,hp2,hp3,zipcode,addr1,addr2,birth,gender,joindate,mail) 
+       values(#{id}, #{name},#{passwd},#{email},#{hp1},#{hp2},#{hp3},#{zipcode},#{addr1},#{addr2},#{birth},#{gender},now(),#{mail})
+     </insert>
+	
+	<select id="duplicationCheck" parameterType="String" resultType="int">
+      select count(*) from member where id = #{id}
+    </select>
+    
+    <select id="loginMember" parameterType="memberDTO" resultType="memberDTO">
+      select id, grade, member_code from member where id = #{id} and passwd= #{passwd}
+     </select>  
+     	
+   	<select id="mainListMember" resultType="memberDTO">
+      select * from member order by member_code desc limit 5 
+    </select>
+    
+    <!-- 전체 회원 목록 -->
+    <select id="getListMemberCount" resultType="int">
+    	select count(*) from member
+    </select>
+    
+    <select id = "managerListMember" parameterType = "java.util.Map" resultType = "memberDTO">
+      ${sql}
+    </select>
+    
+   <delete id= "deleteMember" parameterType = "int">
+      delete from member where member_code = #{member_code}
+   </delete>
+   
+   <!-- 회원 등급 수정(리스트에서) -->
+   <update id = "updateGrade" parameterType  = "memberDTO">
+      update member set  grade = #{grade} where member_code = #{member_code}
+   </update>
+   
+   <!-- 회원 검색 -->
+   <select id="searchMember" parameterType = "java.util.Map" resultType = "MemberDTO">
+      ${sql}
+   </select>
+   
+   <!-- 회원 한명의 정보 -->
+   <select id="getMember" parameterType = "int" resultType = "memberDTO">
+      select * from member where member_code = #{member_code}
+   </select>
+   
+   <!-- 회원 상세 수정 -->
+   <update id="updatePro" parameterType = "memberDTO" >
+      update member set passwd=#{passwd}, email =#{email},
+       hp1=#{hp1}, hp2=#{hp2}, hp3=#{hp3}, 
+       zipcode = #{zipcode}, addr1=#{addr1},
+        addr2=#{addr2} where member_code = #{member_code}
+   </update>
+   
+    <!-- 회원 한명의 정보(장바구니기능에서 필요 -->
+   <select id="getMemberInfo" parameterType = "String" resultType = "memberDTO">
+      select * from member where id = #{id}
+   </select>
+   
+  <!--아이디찾기 -->
+  <select id="idFind" parameterType="MemberDTO" resultType="MemberDTO">
+      select id, email from member where name = #{name} and email = #{email}
+   </select>
+   
+   <select id="pwdFind" parameterType="MemberDTO" resultType="MemberDTO">
+      select passwd, email from member where id = #{id} and email = #{email}
+   </select>
+   
+   <update id="pwdChange" parameterType="MemberDTO">
+      update member set passwd = #{passwd} where id = #{id} and email = #{email}
+   </update>
+   
+   
+   <!-- Mypage -->
+   
+   
+	<select id="mypage_mainO" parameterType="String"
+		resultType="MyOrderDTO">
+		select distinct o.order_code,o.member_id,b.bookname,i.book_code,i.qty,i.each_price,o.order_date,o.status,b.img_name 
+		from order_item as i, `order` as o, book as b 
+		where o.order_code = i.order_code and i.book_code = b.book_code and o.order_code=(select order_code from `order` where member_id=#{member_id} order by order_code desc limit 1)
+		and o.order_date BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH) AND NOW()
+		order by o.order_code desc
+	</select>
+	<select id="mypage_mainQ" parameterType="int"
+		resultType="QnaDTO">
+		select qna_code,subject,reg_date,re_writer,re_reg_date from qna where
+		m_code=#{m_code} order by reg_date desc limit 1
+	</select>
+	<select id="mypage_orderDetail" parameterType="map"
+		resultType="MyOrderDTO">
+		select distinct
+		o.order_code,o.member_id,b.bookname,i.book_code,i.qty,i.each_price,o.order_date,o.tel,o.zipcode,o.addr1,o.addr2,o.message,o.name,o.payment_option,o.status,o.delivery_company,o.delivery_code,b.img_name
+		from `order` as o,order_item as i,book as b
+		where o.order_code = i.order_code and i.book_code = b.book_code and o.member_id=#{member_id} and o.order_code=#{order_code}
+	</select>
+	<select id="mypage_orderList1" parameterType="String"
+		resultType="MyOrderDTO">
+		select distinct
+		o.order_code,o.member_id,b.bookname,i.book_code,i.qty,i.each_price,o.order_date,o.status,b.img_name
+		from `order` as o,order_item as i,book as b
+		where o.order_code = i.order_code and i.book_code = b.book_code and o.member_id=#{member_id} and order_date BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH) AND NOW()
+		order by o.order_code desc
+	</select>
+	<select id="mypage_orderList2" parameterType="String"
+		resultType="MyOrderDTO">
+		select distinct
+		o.order_code,o.member_id,b.bookname,i.book_code,i.qty,i.each_price,o.order_date,o.status,b.img_name
+		from `order` as o,order_item as i,book as b
+		where o.order_code = i.order_code and i.book_code = b.book_code and o.member_id=#{member_id} and order_date BETWEEN DATE_ADD(NOW(),INTERVAL -3 MONTH) AND NOW()
+		order by o.order_code desc
+	</select>
+	<select id="mypage_orderList3" parameterType="String"
+		resultType="MyOrderDTO">
+		select distinct
+		o.order_code,o.member_id,b.bookname,i.book_code,i.qty,i.each_price,o.order_date,o.status,b.img_name
+		from `order` as o,order_item as i,book as b
+		where o.order_code = i.order_code and i.book_code = b.book_code and o.member_id=#{member_id} 
+		order by o.order_code desc
+	</select>
+	<update id="mypage_orderDetailUpdate" parameterType="OrderDTO">
+		update moon.order set
+		name=#{name}, tel=#{tel}, message=#{message},
+		zipcode=#{zipcode}, addr1=#{addr1}, addr2=#{addr2} where
+		order_code=#{order_code}
+	</update>
+	<update id="mypage_orderDetailCancel" parameterType="String">
+		update moon.order set status='주문취소' where order_code=#{order_code}
+	</update>
+	<select id="myPage_qnaList" parameterType="int"
+		resultType="QnaDTO">
+		select qna_code,subject,reg_date,re_writer,re_reg_date from qna where
+		m_code=#{member_code} order by reg_date desc
+	</select>
+	<select id="mypage_qnaDetail" parameterType="int"
+		resultType="QnaDTO">
+		select * from qna where qna_code=#{qna_code}
+	</select>
+	<insert id="myPage_registQna" parameterType="QnaDTO">
+		insert into qna(writer,subject,content,filename,reg_date,m_code)
+		values(#{writer}, #{subject},#{content},#{filename},now(),#{m_code})
+	</insert>
+	<select id="myPage_modifyInfoGet" parameterType="memberDTO"
+		resultType="memberDTO">
+		select * from member where id = #{id}
+	</select>
+	<update id="myPage_modifyInfo" parameterType="memberDTO">
+		update member set
+		email=#{email}, hp1=#{hp1}, hp2=#{hp2}, hp3=#{hp3},
+		zipcode=#{zipcode}, addr1=#{addr1}, addr2=#{addr2} where
+		member_code=#{member_code}
+	</update>
+	<update id="myPage_modifyPw" parameterType="memberDTO">
+		update member set
+		passwd=#{passwd} where member_code=#{member_code}
+	</update>
+	<delete id="myPage_deleteMember" parameterType="memberDTO">
+		delete from
+		member where member_code=#{member_code} and passwd=#{passwd}
+	</delete>
+   
+   
+	
+</mapper>

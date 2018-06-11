@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+
+		#container {
+			width:50%; /* 컨테이너 너비 */
+			padding:30px; /* 패딩 */			
+			margin:0 auto;   /* 화면 중앙에 배치 */
+		}
+		#header {
+			padding:20px;  /* 패딩 */
+			margin-bottom:20px;  /* 아래 요소들과의 간격(마진) */
+		}
+		#contents {
+			width: 620px;  /* 너비 */
+			padding: 20px;  /* 패딩 */
+			float: left;  /* 왼쪽으로 플로팅 */
+			margin-bottom: 20px;  /* 아래 요소와의 간격 */
+		}
+		#sidebar {
+			width: 220px;  /* 너비 */
+			padding: 20px;  /* 패딩 */
+			float: right;  /* 오른쪽으로 플로팅 */
+			margin-bottom: 20px;  /* 아래 요소와의 간격 */
+			background:#eee; 
+		}
+		#footer {
+			clear:both;  /* 양쪽 플로팅 해제 */
+			padding:20px;  /* 패딩 */
+		}

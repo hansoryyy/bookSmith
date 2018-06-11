@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.smith.book.model.AuctionMapper">
+   
+   <!-- ========고객용======== --> 
+   <select id="listAuction" resultType="auctionDTO"> <!-- 경매 리스트 -->
+      select * from auction where ready = '1' order by a_code desc
+   </select>
+   <insert id="bringAuction" parameterType="AuctionDTO">  <!-- 경매 신청서 등록 -->
+      insert into auction(name,money,time,filename,filesize,member_id,content,ready)
+      values(#{name},#{money},#{time},#{filename},#{filesize},#{member_id},#{content},0)
+   </insert>
+   <insert id="bidderInsert" parameterType="bidderDTO"> <!-- 입찰하기 -->
+      insert into bidder(id,a_code,bid_money,name,money,time,member_id)
+      values(#{id},#{a_code},#{bid_money},#{name},#{money},#{time},#{member_id})
+   </insert>
+   <select id="listTimeAuction" resultType="int"> <!-- 경매 리스트 마감시간 계산(초단위) -->
+      select TIMESTAMPDIFF(second,now(),time) from auction where ready = '1' order by a_code desc
+   </select>
+   <update id="bidding" parameterType="AuctionDTO"> <!-- 누군가 입찰시 현재 입찰금액 변경(table=auction) -->
+      update auction set money = #{money} where a_code=#{a_code}
+   </update>
+   <select id="getAuction" parameterType="int" resultType="AuctionDTO">  <!-- 경매물품정보 가져오기 -->
+      select * from auction where a_code = #{a_code}
+   </select>
+   <select id="getLeavetime" parameterType="int" resultType="int"> <!-- 하나의 경매품 마감시간 계산 -->
+      select TIMESTAMPDIFF(second,now(),time) from auction where a_code=#{a_code}
+   </select>
+   <select id="highest" parameterType="int" resultType="String">  <!-- 최종 낙찰자 -->
+      select id from bidder where a_code=#{a_code} order by money desc limit 1
+   </select>
+   <select id="myListBidder" parameterType="String" resultType="bidderDTO"> <!-- 내 입찰리스트 갖고오기 -->
+      select * from bidder where id = #{member_id} order by a_code desc
+   </select>
+   <select id="myListTime" parameterType="String" resultType="int"> <!-- 내 입찰 리스트 마감시간 계산 -->
+      select TIMESTAMPDIFF(second,now(),time) from bidder where id=#{id} order by a_code desc
+   </select>
+   <select id="myListAuction" parameterType="String" resultType="auctionDTO"><!-- 내가올린 경매품 리스트 -->
+      select * from auction where member_id = #{id} order by a_code desc
+   </select>
+   <select id="myListTimeAuction" parameterType="String" resultType="int"> <!-- 내가 올린 경매 리스트 마감시간 계산 -->
+      select TIMESTAMPDIFF(second,now(),time) from auction where member_id = #{member_id} order by a_code desc
+   </select>
+   
+   <select id="bidCheck" parameterType="bidderDTO" resultType="int">  <!-- 내가 입찰했던 물품인지 검색 -->
+      select bidder_code from bidder where id = #{id} and a_code=#{a_code}
+   </select>
+   <update id="bidUpdate" parameterType="bidderDTO"> <!-- 같은 물품 다른금액으로 입찰 -->
+      update bidder set bid_money=#{bid_money},money=#{money} where a_code=#{a_code} and id=#{id}
+   </update>
+   <update id="moneyBidder" parameterType="bidderDTO">    <!-- 다른사람이 입찰시에 현재 입찰금액 변경(table=bidder) -->
+      update bidder set money=#{money} where a_code = #{a_code}
+   </update>
+   
+   <delete id="deleteBidder" parameterType="int"> <!-- 내가 입찰중인 경매 취하 -->
+      delete from bidder where bidder_code=#{bidder_code}
+   </delete>
+   <delete id="deleteAuction" parameterType="int"> <!-- 내 경매품 취하 -->
+      delete from auction where a_code = #{a_code}
+   </delete>
+   
+   
+   <!-- =========관리자처리========== -->
+   <select id="readyListAuction" resultType = "auctionDTO"> <!-- 경매 신청서 리스트 -->
+      select * from auction where ready = '0' order by a_code desc
+   </select>
+   <update id="successAuction" parameterType="int">   <!-- 경매 신청서 통과처리 -->
+      update auction set ready = '1' where a_code = #{a_code}
+   </update>
+   <delete id="failAuction" parameterType="int">  <!-- 경매 신청서 불통과 처리 -->
+      delete from auction where a_code = #{a_code}
+   </delete>
+   <select id="finishAuction" resultType="auctionDTO"><!-- 시간 끝난 경매품 리스트 -->
+      select * from auction where now()>time and ready ='1' order by a_code desc
+   </select>
+   <update id="closeAuction" parameterType="int"> <!-- 경매 마감 처리 -->
+      update auction set ready='2' where a_code=#{a_code} 
+   </update>
+   <update id="closeBidder" parameterType="int">
+   	 update bidder set ready  = '2' where a_code = #{a_code}
+   </update>
+   <select id="closeList" resultType="auctionDTO"><!-- 마감된 경매품 리스트 -->
+      select * from auction where ready = '2' order by a_code desc
+   </select>
+   
+   <!-- ========검색========= -->
+   <select id="searchAuction" parameterType="java.util.Map" resultType="auctionDTO">
+      ${sql}
+   </select>
+   <select id="searchTimeAuction" parameterType="java.util.Map" resultType="int"> <!-- 경매 리스트 마감시간 계산(초단위) -->
+      ${sql}
+   </select>
+</mapper>

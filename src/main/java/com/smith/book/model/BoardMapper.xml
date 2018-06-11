@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.smith.book.model.BoardMapper">
+	<select id="listBoard" resultType="boardDTO">
+		select *,(select bookname from book where free.book_code=book.book_code) as
+		bookname,
+		(select img_name from book where free.book_code=book.book_code) as img_name
+		from free
+		order by board_code desc
+	</select>
+
+	<select id="reviewListBoard" parameterType="int"
+		resultType="boardDTO">
+		select * from free
+		where book_code=#{book_code}
+		order by board_code desc
+	</select>
+
+	<update id="commentUpdate" parameterType="int">
+		update free set c_count = c_count + 1 where board_code = #{board_code}
+	</update>
+
+	<select id="getCount" resultType="int">
+		select count(*) from free
+	</select>
+
+	<select id="getBoard" parameterType="int" resultType="boardDTO">
+		select * from free where board_code = #{board_code}
+	</select>
+
+	<select id="listCommentTime" parameterType="int"
+		resultType="String">
+		select TIMESTAMPDIFF(minute,date,now()) from comment where b_code =
+		#{b_code}
+	</select>
+
+	<select id="listComment" parameterType="int"
+		resultType="CommentDTO">
+		select * from comment where b_code = #{b_code}
+	</select>
+
+	<insert id="insertComment" parameterType="CommentDTO">
+		insert into comment (id, content, b_code) values(#{id}, #{content},
+		#{b_code})
+	</insert>
+
+	<select id="searchBoard" parameterType="java.util.Map"
+		resultType="boardDTO">
+		${sql}
+	</select>
+
+	<update id="readCount" parameterType="int">
+		update free set readcount = readcount + 1 where board_code = #{board_code}
+	</update>
+
+	<insert id="insertBoard" parameterType="boardDTO">
+		insert into free (writer, subject, content, filename, filesize, readcount,
+		c_count, book_code, rate)
+		values(#{writer}, #{subject}, #{content}, #{filename}, #{filesize}, 0, 0, #{book_code},
+		#{rate})
+	</insert>
+
+	<!-- 보드 리스트 다섯개짜리 -->
+	<select id="mainListBoard" resultType="boardDTO">
+		select * from free order by board_code desc limit 5
+	</select>
+	<!-- 보드 리스트 다섯개짜리 -->
+<!-- 	<select id="mainListBoard" resultType="boardDTO">
+		select * from free order by board_code desc limit 5
+	</select> -->
+	   <select id="mainListReview" resultType="FreeDTO">
+      	select * from free order by reg_date desc limit 5
+    </select>
+
+
+	<!-- 공지사항(notice) -->
+	<select id="getNoticeCount" resultType="int">
+		select count(*) from notice
+	</select>
+	<select id="listNotice" parameterType="java.util.Map"
+		resultType="noticeDTO">
+		${sql}
+	</select>
+	<insert id="insertNotice" parameterType="noticeDTO">
+		insert into notice ( subject, content, filename, filesize )
+		values( #{subject}, #{content}, #{filename}, #{filesize})
+	</insert>
+	<select id="getNotice" parameterType="int"
+		resultType="noticeDTO">
+		select * from notice where notice_code = #{notice_code}
+	</select>
+	<select id="searchNotice" parameterType="java.util.Map"
+		resultType="noticeDTO">
+		${sql}
+	</select>
+	<update id="N_readCount" parameterType="int">
+		update notice set readcount = readcount + 1 where notice_code =
+		#{notice_code}
+	</update>
+	<!-- Q&A -->
+	<select id="listQna" resultType="qnaDTO">
+		select * from qna order by qna_code desc
+	</select>
+	<select id="getQnaCount" resultType="int">
+		select count(*) from qna
+	</select>
+	<select id="getQna" parameterType="int" resultType="QnaDTO">
+		select * from qna where qna_code = #{qna_code}
+	</select>
+	<insert id="replyQna" parameterType="qnaDTO">
+		update qna set re_writer=#{re_writer}, re_content=#{re_content},
+		re_filename=#{re_filename},
+		re_filesize=#{re_filesize}, re_reg_date=now() where qna_code=#{qna_code}
+	</insert>
+
+	<select id="countRate" parameterType="int" resultType="float">
+		SELECT
+		SUM(rate)/COUNT(rate) avg_rate
+		FROM
+		free
+		WHERE
+		book_code = #{book_code}
+	</select>
+
+	<update id="updateRate" parameterType="BoardDTO">
+		UPDATE
+		book
+		SET
+		avg_rate = #{avg_rate},
+		review_count = review_count + 1
+		WHERE
+		book_code = #{book_code}
+	</update>
+
+	<update id="updateNotice" parameterType="NoticeDTO">
+		update notice set subject = #{subject}, content = #{content} where
+		notice_code = #{notice_code}
+	</update>
+
+	<delete id="deleteNotice" parameterType="int">
+		delete from notice where notice_code = #{notice_code}
+	</delete>
+
+	
+
+
+	<select id="searchQna" parameterType="java.util.Map"
+		resultType="QnaDTO">
+		${sql}
+	</select>
+
+	<delete id="deleteQna" parameterType="int">
+		delete from qna where qna_code=#{qna_code}
+	</delete>
+
+	<!-- 리뷰 전체 개수 -->
+	<select id="getReviewCount" resultType="int">
+		select count(*) from free
+	</select>
+
+	<!-- 리뷰 목록 -->
+	<select id="listReview" parameterType="java.util.Map"
+		resultType="FreeDTO">
+		${sql}
+	</select>
+
+	<!-- 리뷰 검색 -->
+	<select id="searchReview" parameterType="java.util.Map"
+		resultType="FreeDTO">
+		${sql}
+	</select>
+
+	<!-- 리뷰 보기 -->
+	<select id="contentReview" parameterType="int"
+		resultType="FreeDTO">
+		select *,(select bookname from book where free.book_code=book.book_code) as
+		bookname,
+		(select img_name from book where free.book_code=book.book_code) as img_name
+		from free
+		where board_code = #{board_code} order by board_code desc
+	</select>
+
+	<!-- 리뷰 수정 -->
+	<update id="updateReview" parameterType="java.util.Map">
+		${sql}
+	</update>
+
+	<!-- 리뷰 삭제 -->
+	<delete id="deleteReview" parameterType="int">
+		delete from free where board_code = #{board_code}
+	</delete>
+
+
+</mapper>

@@ -1,0 +1,47 @@
+@charset "EUC-KR";
+* {
+    box-sizing: border-box;
+}
+hr{
+	border:none;
+}
+/* ------------------------------- */
+.con{
+    margin:0 auto;
+    float:center;
+    width:95%;
+}
+a #title{
+	
+}
+.header {
+    color: #971afd;
+    padding:0.1%;
+    width:100%;
+}
+/* ------------------------------- */
+.right {
+    width: 75%;
+    float: left;
+}
+.drop {
+    width: 25%;
+    float: left;
+}
+/* ------------------------------- */
+.dropContent{
+	display:none;
+	position: absolute;
+}
+.dropContent a {
+    color: green;
+    padding: 2px;
+    text-decoration: none;
+    display: inline-block;
+}
+.drop:hover .dropContent{
+	display:block;
+	color:blue;
+}
+.dropContent a:hover {background-color: #f1f1f1}
+/* ------------------------------- */

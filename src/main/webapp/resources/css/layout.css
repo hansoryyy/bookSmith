@@ -1,0 +1,31 @@
+body { margin:0; padding:0; }
+ 
+.wrap {
+    width:90%;
+    margin:0 auto;
+}
+.header { 
+    height:15%;
+    margin-bottom:5px;
+    background-color:CC00CC;
+}
+.content {
+    width:80%;
+    height:520px;
+    background-color:FFFFFF;
+    float:right;
+}
+.sidebar {
+    width:20%;
+    height:520px;
+    background-color:FFFFFF;
+    float:left;
+}
+/* .footer {
+    height:70px;
+    margin-top:15px;
+    background-color:#0d7963;
+} */
+.clear {
+    clear:both;
+}

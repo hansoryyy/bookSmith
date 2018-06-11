@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.smith.book.model.BookMapper">
+
+	<select id="getBook" parameterType="int" resultType="BookDTO">
+		select *
+      from book as b, writer as w, publisher as p
+      where b.w_code=w.w_code and b.p_code=p.p_code and book_code = #{book_code}
+	</select>
+	
+	<select id="getBookCount" resultType="int">
+		select count(*) from book
+	</select>
+	
+	<insert id="insertBook" parameterType="BookDTO">
+		insert into book
+	 	(g_code, w_code, p_code, bookname, price,
+		 comment, img_name, img_size, IBSN, qty,
+		  pub_date) 
+		 values
+		 (#{g_code}, #{w_code}, #{p_code}, #{bookname},
+		  #{price}, #{comment}, #{img_name}, #{img_size},
+		  #{IBSN}, #{qty}, #{pub_date})
+	</insert>
+	
+	<delete id="deleteBook" parameterType="int">
+		delete from book where book_code = #{book_code}
+	</delete>
+	
+	<select id="listBook" parameterType="java.util.Map" resultType="SearchDTO">
+		${sql}
+	</select>
+	
+	<update id="updateBook" parameterType="searchDTO">
+		update book set qty=#{qty}, price=#{price} where book_code=#{book_code}
+	</update>
+	
+	
+	
+	<select id = "max_g_code" resultType="int">
+		select max(g_code) from genre;
+	</select>															
+	
+	<select id = "maxS_g_code" parameterType="int" resultType="int">
+		select max(g_code) from genre where g_code between #{g_code} and #{g_code} + 99;
+	</select> 
+	
+	<insert id="insertGenre" parameterType="GenreDTO">
+		insert into genre(g_code, name) values(#{g_code}, #{name})
+	</insert>
+	
+	<select id ="listBig" resultType="GenreDTO">
+		select * from genre where g_code % 1000 = 0
+	</select>
+	<select id ="listSmall" parameterType="int" resultType="GenreDTO">
+		select * from genre where g_code between #{g_code}+1 and #{g_code} + 99;
+	</select>
+	
+	<select id = "listGenre" resultType="GenreDTO">
+		select * from genre;
+	</select>
+	
+	<delete id="deleteLittleGenre" parameterType="int">
+		delete from genre where g_code = #{g_code}
+	</delete>
+	<delete id="deleteBigGenre" parameterType="int">
+		delete from genre where g_code between #{g_code} and #{g_code}+99;
+	</delete>
+
+				
+	<select id="getWriterCount" resultType="int">
+		select count(*) from writer
+	</select>
+
+	<insert id="insertWriter" parameterType="WriterDTO">
+		insert into writer(w_name, w_introduction)
+		values(#{w_name}, #{w_introduction})
+	</insert>
+
+	<delete id="deleteWriter" parameterType="int">
+		delete from writer where w_code = #{w_code}
+	</delete>
+
+	<select id="listWriter" resultType="WriterDTO">
+		select * from writer order by w_code desc
+	</select>
+	
+	<select id="listWriters" parameterType="java.util.Map" resultType="WriterDTO">
+		${sql}
+	</select>
+	
+	<select id="getPublisherCount" resultType="int">
+		select count(*) from publisher
+	</select>
+	
+
+	<insert id="insertPublisher" parameterType="PublisherDTO">
+		insert into publisher(p_name, p_introduction)
+		values(#{p_name}, #{p_introduction})
+	</insert>
+
+	<delete id="deletePublisher" parameterType="int">
+		delete from publisher where p_code = #{p_code}
+	</delete>
+
+	<select id="listPublisher" resultType="PublisherDTO">
+		select * from publisher
+	</select>
+	
+	<select id="listPublishers" parameterType="java.util.Map" resultType="PublisherDTO">
+		${sql}
+	</select>
+
+	<select id="writerCallback" parameterType="String"	resultType="WriterDTO">
+		select * from writer where w_name like CONCAT('%',#{w_name},'%')
+	</select>
+
+	<select id="publisherCallback" parameterType="String" resultType="PublisherDTO">
+		select * from publisher where p_name like CONCAT('%',#{p_name},'%')
+	</select>
+	
+	<select id="bookCallBack" parameterType="String" resultType="BookDTO">
+      select bookname,book_code,img_name,pub_date from book where bookname like CONCAT('%',#{b_name},'%')
+   </select>
+	
+	 <select id="searchPro" parameterType="java.util.Map" resultType="searchDTO">
+       ${sql}
+   	 </select>
+   	 
+   	 <!-- 임시 xml !! -->
+   	 <select id = "listNewBigGenreBook" parameterType="int" resultType="SearchDTO">
+		select * from book as b 
+		inner join writer as w 
+		inner join publisher as p 
+		on(b.w_code = w.w_code and b.p_code = p.p_code)
+		and reg_date > date_add(now(), interval - 4800 hour)
+		where g_code-(g_code % 1000) = 1000 - (1000 % 1000);
+	</select>
+	
+	<!-- 검색 쿼리 -->
+   <select id="bookSearch" parameterType="java.util.Map" resultType="searchDTO">
+       ${sql}
+    </select>
+    
+    <!-- 장르 리스트 나열하기 -->
+    <select id="genreList" resultType="genreDTO">
+      select * from genre order by g_code
+   </select>
+   
+   <update id="updateSaleCount" parameterType="BookDTO">
+   		update book set saleCount = saleCount + #{qty} where book_code = #{book_code}
+   </update>
+   
+   <!-- 추천 -->
+   <select id="recommand" resultType="SearchDTO">
+      SELECT * FROM book b INNER JOIN writer w INNER JOIN publisher p WHERE b.w_code=w.w_code AND p.p_code = b.p_code ORDER BY rand() LIMIT 1
+   </select>
+   
+   
+   <select id="searchBook" parameterType="java.util.Map" resultType="bookDTO">
+      ${sql}
+   </select>
+   <select id="searchPublisher" parameterType="java.util.Map" resultType="publisherDTO">
+      ${sql}
+   </select>
+   <select id="searchWriter" parameterType="java.util.Map" resultType="WriterDTO">
+      ${sql}
+   </select>
+   
+   <select id="bestBooks" resultType="SearchDTO">
+      SELECT * FROM book b INNER JOIN writer w INNER JOIN publisher p WHERE b.w_code=w.w_code AND p.p_code = b.p_code ORDER BY saleCount desc LIMIT 4
+   </select>
+   
+   <select id="newBooks" resultType="SearchDTO">
+      SELECT * FROM book b INNER JOIN writer w INNER JOIN publisher p WHERE b.w_code=w.w_code AND p.p_code = b.p_code ORDER BY pub_date desc LIMIT 4
+  </select>
+   
+   <update id="increaseReadCount" parameterType="int">
+   		UPDATE
+   			book
+   		SET
+   			readCount = readCount + 1
+   		WHERE
+   			book_code = #{book_code}
+   </update>
+   
+   
+	
+	
+
+
+
+
+</mapper>
