@@ -60,6 +60,8 @@ public class OrderMapper {
 		return 1;
 	}
 	
+	
+	
 	public List<OrderDTO> getOrder(String id){
 		List<OrderDTO> list = sqlSession.selectList("getOrder", id);
 		return list;

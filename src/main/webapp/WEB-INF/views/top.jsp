@@ -149,11 +149,17 @@
       <input type="hidden" name="currentPage" value="1">
       <input type="hidden" name="orderBy" value="readcount">
       <input type="hidden" name="bali" value="li">
-         <select id="sf" class="w3-select w3-border" name="searchType" style="width:100%; background-color:#C72FB3; color:white;">
+        <!--  <select id="sf" class="w3-select w3-border" name="searchType" style="width:100%; background-color:#C72FB3; color:white;">
          <option class = "selectF" value="bookname">통합검색</option> 
          <option class = "selectF" value="(bo.bookname">책 이름</option>  
          <option class = "selectF" value="(w_name">작가</option>   
          <option class = "selectF" value="(p_name">출판사</option>
+         </select> -->
+         <select class="w3-select w3-border" name="searchType" style="width:100%; background-color:#C72FB3; color:white;">
+         	 <option value="searchAll">통합검색</option>   
+         	 <option value="bookname">도서명</option>   
+	         <option value="w_name">작가</option>   
+	         <option value="p_name">출판사</option>
          </select>
         </div>
         <div class="w3-col m10 w3-center">

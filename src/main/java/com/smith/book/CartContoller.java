@@ -80,13 +80,11 @@ public class CartContoller {
 	// 장바구니 물품추가
 	@RequestMapping(value = "/insert_cart", produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public Map<String, String> insertCart(HttpServletRequest req, HttpSession session, @RequestParam int book_code,
+	public Map<String, Object> insertCart(HttpServletRequest req, HttpSession session, @RequestParam int book_code,
 			@RequestParam int qty) throws JsonProcessingException {
-		System.out.println("BOOK_CODE : " + book_code );
-		System.out.println("QTY : " + qty);
 		
 		MemberDTO m_dto = (MemberDTO) session.getAttribute("userLoginInfo");
-		Map<String, String> json = new HashMap<String, String>();
+		Map<String, Object> json = new HashMap<String, Object>();
 
 		if (m_dto == null) { // 비회원 (or 회원인데 로그인 안했음) -> session에 저장 하겠다
 
@@ -94,7 +92,6 @@ public class CartContoller {
 			if (map == null) { // 비회원이 최초로 물품을 담을때   key:"cart" value:map 으로 세션을 생성하겠다.
 				map = new HashMap<Integer, CartDTO>();
 				session.setAttribute("cart", map);
-
 			}
 
 			CartDTO cart = map.get(book_code);
@@ -106,7 +103,7 @@ public class CartContoller {
 				cart = new CartDTO(book_code, bookDto.getBookname(), bookDto.getPrice(), qty, bookDto.getImg_name());
 				map.put(book_code, cart);
 			}
-			json.put("success", "true");
+			json.put("success", Boolean.TRUE);
 			return json;
 
 		} else { // 회원인경우 DB cart Table에 저장하겠다 .
@@ -132,7 +129,7 @@ public class CartContoller {
 				cartMapper.updateQty(cart);
 				
 			}
-			json.put("success", "true");
+			json.put("success", Boolean.TRUE);
 			return json;
 		}
 	}
@@ -144,8 +141,7 @@ public class CartContoller {
 			@RequestParam int qty, @RequestParam int mode)
 			throws JsonProcessingException {
 		Map<String, Object> json = new HashMap<String, Object>();
-	
-	
+
 		if(mode == 0) {
 			CartDTO dto = (CartDTO) session.getAttribute("direct");
 			dto.setQty(qty);

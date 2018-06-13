@@ -150,10 +150,6 @@ public class OrderController {
 		return mav;
 	}
 	
-	@RequestMapping(value ="/orderCheck_guest", method = RequestMethod.GET)
-	public String orderCheck_guest(HttpServletRequest req) {
-		return "/shop/orderCheck_guest";
-	}
 	
 	@RequestMapping(value = "/orderCheck_guest", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody

@@ -143,7 +143,7 @@
 	<!-- 검색 쿼리 -->
    <select id="bookSearch" parameterType="java.util.Map" resultType="searchDTO">
        ${sql}
-    </select>
+   </select>
     
     <!-- 장르 리스트 나열하기 -->
     <select id="genreList" resultType="genreDTO">

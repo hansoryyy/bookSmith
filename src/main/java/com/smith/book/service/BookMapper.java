@@ -203,7 +203,7 @@ public class BookMapper {
 		return list;
 	}
 
-	public List<SearchDTO> bookSearch(String search, String searchType, int currentPage, String orderby) {
+	/*public List<SearchDTO> bookSearch(String search, String searchType, int currentPage, String orderby) {
 	      String sql ="";
 	      if(searchType.equals("bookname")) {
 	            searchType="(bookname LIKE '%"+ search + "%' OR w_name LIKE '%"+search+"%' OR p_name ";
@@ -221,7 +221,34 @@ public class BookMapper {
 	      List<SearchDTO> list = sqlSession.selectList("bookSearch", map);
 	      return list;
 	   }
-
+*/
+	public List<SearchDTO> bookSearch(String search, String searchType, int currentPage) {
+	      String sql ="";
+	      if(searchType.equals("searchAll")) {
+	         sql = "SELECT DISTINCT * FROM book b , writer w , publisher p " + 
+	               "WHERE (b.bookname LIKE '%" + search + "%') AND b.w_code = w.w_code AND b.p_code=p.p_code " + 
+	               "UNION " + 
+	               "SELECT DISTINCT * FROM book b , writer w , publisher p " + 
+	               "WHERE (w.w_name LIKE '%" + search + "%') AND b.w_code = w.w_code AND b.p_code=p.p_code " + 
+	               "UNION " + 
+	               "SELECT DISTINCT * FROM book b , writer w , publisher p " + 
+	               "WHERE (p.p_name LIKE '%" + search + "%') AND b.w_code = w.w_code AND b.p_code=p.p_code " + 
+	               "LIMIT " + currentPage + ",21"; 
+	        } else {
+	           if(searchType.equals("bookname")) searchType="b.bookname";
+	           else if(searchType.equals("w_name")) searchType="w.w_name";
+	           else if(searchType.equals("p_name")) searchType="p.p_name";
+	           sql = "SELECT DISTINCT * FROM book b , writer w , publisher p " + 
+	               "WHERE (" + searchType + " LIKE '%" + search + "%') AND b.w_code = w.w_code AND b.p_code=p.p_code "+ 
+	               "LIMIT " + currentPage + ",21"; 
+	        }
+	      java.util.HashMap<String, String> map = new HashMap<String, String>();
+	      map.put("sql", sql);
+	      List<SearchDTO> list = sqlSession.selectList("bookSearch", map);
+	      return list;
+	   }
+	
+	
 	
 	public List<SearchDTO> bookSearchByGenre(int g_code, String mode, int currentPage, String orderby) {
 

@@ -75,7 +75,7 @@
       var addr =  document.guest.addr1 + document.guest.addr2
       var zipcode = document.guest.zipcode.value;
       var price = document.cart.total.value;
-      IMP.init('imp46465159'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+      IMP.init('imp83045627'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
       IMP.request_pay({
           pg : 'inicis', // version 1.1.0부터 지원.
           pay_method : 'card',
@@ -107,25 +107,18 @@
       });   
    }
    function doPayM(){
-         var IMP = window.IMP; // 생략가능
-         var name = document.guest.name.value;
-         var hp = document.guest.hp1.value + document.guest.hp2.value + document.guest.hp3.value;
-         var email = document.guest.email.value;
-         var addr =  document.guest.addr1 + document.guest.addr2
-         var zipcode = document.guest.zipcode.value;
-         var price = document.cart.total.value;
-         IMP.init('imp46465159'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+         IMP.init('imp83045627'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
          IMP.request_pay({
              pg : 'inicis', // version 1.1.0부터 지원.
              pay_method : 'card',
              merchant_uid : 'merchant_' + new Date().getTime(),
-             name : name,
-             amount : price,
-             buyer_email : email,
+             name : document.guest.name.value,
+             amount : document.cart.total.value,
+             buyer_email :document.guest.email.value,
              buyer_name :  name, 
-             buyer_tel :  hp,
-             buyer_addr : addr,
-             buyer_postcode : zipcode,
+             buyer_tel :  document.guest.hp1.value + document.guest.hp2.value + document.guest.hp3.value,
+             buyer_addr : document.guest.addr1 + document.guest.addr2,
+             buyer_postcode : document.guest.zipcode.value,
              m_redirect_url : 'http://localhost:8080/project/pay.success'
          }, function(rsp) {
              if ( rsp.success ) {
@@ -134,17 +127,10 @@
                  msg += '상호 명 : BookSmith \n';
                  msg += '결제 금액 : ' + price + '\n';
                  msg += '카드 승인번호 : ' + rsp.apply_num +'\n';
-                
-                /*  msg += '고유ID : ' + rsp.imp_uid;
-                 msg += '상점 거래ID : ' + rsp.merchant_uid;
-                 msg += '결제 금액 : ' + rsp.paid_amount;
-                 msg += '카드 승인번호 : ' + rsp.apply_num; */
                  document.guest.submit();
-                 
              } else {
                  var msg = '결제에 실패하였습니다.';
                  msg += '에러내용 : ' + rsp.error_msg;
-                 
              }
              alert(msg);
              
@@ -283,6 +269,7 @@
 <script type="text/javascript">
 
    var ctxpath = '${pageContext.request.contextPath}';
+   
    function delCartItem ( btn, mode ) {
       var book_code = $(btn).attr('id');
       $.ajax ( {
@@ -303,13 +290,8 @@
       });
    } 
    function updateCartItem( book_code, qty,  index, mode ){
-	   var book_code = book_code;
-	   var index = index;
-	   /* var qty = $("#updateQty"+ index + " option:inputed").val(); */
-	   var qty = qty;
 	   console.log('updateCartItem() 메소드작동');
 	   console.log('선택된 book_code : '+ book_code + ', 선택된 수량  :' + qty + ', index값 : ' + index);
-	   
 	   $.ajax({
 			method : 'GET',
 			url : ctxpath + '/update_cart',
@@ -320,13 +302,11 @@
 			},
 	         success : function( res ){
 	            if ( res.success  ) {
-
 	            	var qty = res.qty;
 	            	var each_price = res.each_price;
 	            	var price = res.price;
 	            	var total = res.total;
 	            	
-	            	/* $('#price'+index).text (comma(''+price)); */
 	            	$('#each_price'+index).text(comma('' + each_price));
 	            	$('#total').text(comma('' + total));
 	            	$('#msg').css({opacity: 0.0, visibility: "visible"}).animate({opacity: 1.0});
@@ -336,12 +316,12 @@
 	            }else{
 	            	;
 	            }
-	         } ,
+	        } ,
 	         
-	      });
+	   });
    }
 
-   function comma(x) {
+   function comma(x) { 
 	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
  

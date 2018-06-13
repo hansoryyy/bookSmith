@@ -28,7 +28,7 @@ public class BookController {
       
       if(search==null||searchType==null)return"index";
       
-      List<SearchDTO> list = bookMapper.bookSearch(search, searchType, ((currentPage-1)/5) * 20, orderBy);
+      List<SearchDTO> list = bookMapper.bookSearch(search, searchType, ((currentPage-1)/5) * 20);
       
       //다음|이전 페이지를 위한 파라미터값들 
       req.setAttribute("searchList", list);

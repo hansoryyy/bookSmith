@@ -28,7 +28,6 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter{
 	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler)
 			throws Exception {
 		String uri = stripUri(req);
-//		System.out.println("[LOGIN CHECK] uri : " + uri);
 		
 		if ( adminUrls.contains(uri) ) {
 			if ( ! isAdmin ( req )) {
@@ -40,13 +39,12 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter{
 		
 		if ( loginCheckUrls.contains(uri) ) {
 			if ( ! hasLogin ( req ) ) {
-//				System.out.println("              NO LOGIN INFO");
 				res.sendRedirect(req.getContextPath() + serviceLoginUri);
 				return false;
 			}
 		}
 		return true;
-		// return super.preHandle(req, res, handler);
+
 	}
 	
 	boolean isAdmin(HttpServletRequest req) {
@@ -54,11 +52,6 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter{
 		if ( session == null) {
 			return false;
 		}
-		
-		/*
-		session.setAttribute("log", dto.getId()); // 성공할시 세션 생성
-		session.setAttribute("grade", dto.getGrade());
-		 */
 		String adminId = (String) session.getAttribute("log");
 		Integer grade = (Integer) session.getAttribute("grade");
 		if ( adminId != null && grade != null && grade >= 5 ) {

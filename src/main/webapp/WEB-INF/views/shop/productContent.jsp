@@ -32,12 +32,9 @@
       }
    }
 </script>
+
 <script>
    var ctxpath = '${pageContext.request.contextPath}';
-   /*
-    * @param book_code Book
-    */
-   
    function add_cart(book_code) {
       var realQty = document.qty.realQty.value;
       $.ajax({
@@ -49,18 +46,17 @@
          },
          success : function(res) {
             console.log('res 값 :' + res.success);
-            if(res.success == 'true'){
+            if(res.success == true){
                var goCart = confirm("선택한 상품이 장바구니에 담겼습니다.\n장바구니로 이동 하시겠습니까?");
                if (goCart) {
-                  location.href = 'list_cart';
-              }
-         }
-      },
-   });
-
-}
-
+                  		location.href = 'list_cart';
+             		 }
+      		 }
+     	},
+  	});
+ }
 </script>
+
 <script>
    var ctxpath = '${pageContext.request.contextPath}';
    function purchase(book_code) {
