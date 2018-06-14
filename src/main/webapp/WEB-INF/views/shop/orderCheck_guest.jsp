@@ -43,9 +43,9 @@
 						guest_passwd : guest_passwd
 					},
 					success : function(res) {
-							$("#member").empty()
-							$("#member").append(message)	
+							$("member").empty();
 						if (res.check.length == 0) {
+							$("#member").append(message);
 							document.getElementById('order').innerHTML = "";
 							document.getElementById('yesOrder').innerHTML = "";
 							document.getElementById('noOrder').innerHTML = "<h3>존재하지 않는 주문입니다...\n 이메일과 비밀번호를 확인하세요 ! </h3>";
@@ -59,9 +59,7 @@
 							var items;
 							var str;
 							var total = 0;
-
-							document.getElementById('order').innerHTML = "";
-							$("#order").append("");
+							
 							$.each ( order, function(i) {
 								
 								items = order[i].items;
@@ -123,7 +121,7 @@
 	<jsp:include page="../top.jsp" />
 
 	
-	<div>
+	
 	<br>
 	<br>
 	<table width="400" align="center">
@@ -137,137 +135,35 @@
     	<input type="password" class="form-control" id="exampleInputPassword1" name="guest_passwd" placeholder="주문시 입력한 비밀번호 입력 ...">
     	<br>
     	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<input type="button" class="btn btn-primary" onclick="orderCheck();" value="조회하기" /> 	
-  	</div>
+  	</div><br>
   	
-  		<br>
+  		
   		<div align="center">
 			<label style="color: red" id="noOrder"></label>
 			<label style="color: blue" id="yesOrder"></label>
-  		</div>
-  		<br>
-  		<br>
+  		</div><br><br>
+  		
 	</form>
 	</td></tr></table>
 	
-  </div>
+
 	<div align = "center" id="member">
-		<h4>BookSmith의 회원이신가요 ? 로그인후 마이페이지에서 확인하세요 !</h4>
-  		<br>
+		<h4>BookSmith의 회원이신가요 ? 로그인후 마이페이지에서 확인하세요 !</h4><br>
+		
   		<button type="submit" class="btn btn-danger" onclick="location.href='login.member'">로그인 하러가기</button>
   	</div>
   	
+  	
 	<br>
-	 <table width="1400" align="center">
-	 <div>
-	
+	<table width="1400" align="center">
 	 	<tr><td>
+	 	
 		<table id="order" class="ui pink table">
-			<thead>
-				<tr>
-					<th>수령인</th>
-					<th>연락처</th>
-					<th>배송지</th>
-					<th>주문일자</th>
-					<th>요구사항</th>
-					<th>결제수단</th>
-					<th>배송상태</th>
-					<th>배송사</th>
-					<th>운송장번호</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>오연수</td>
-					<td>01027657499</td>
-					<td>우편번호 :46758<br>부산 강서구 신호동 185<br>ITBANK아파트 101동
-						601호
-					</td>
-					<td>1527578261000</td>
-					<td>부재시 경비실에 맞겨주세요</td>
-					<td>카드</td>
-					<td>배송대기</td>
-					<td>CJ택배</td>
-					<td>20180101-2345</td>
-				</tr>
-				<tr>
-					<td colspan="2"></td>
-					<td colspan="7" class="nopadding">
-						<table class="table">
-						<tr>
-							<th></th>
-							<th>책코드</th>
-							<th>책이름</th>
-							<th>주문수량</th>
-							<th>합계</th>
-						</tr>
-						<tr>
-							<td>{image}</td>
-							<td>68</td>
-							<td>82년생 김지영</td>
-							<td>11</td>
-							<td>143000</td>
-						</tr>
-						<tr>
-							<td>{image}</td>
-							<td>72</td>
-							<td>흰</td>
-							<td>1</td>
-							<td>12500</td>
-						</tr>
-						</table>
-					</td>
-				</tr>
-				
-				<tr>
-					<td colspan="9" align="right">총금액 : 155500</td>
-				</tr>
-			</tbody>
-			<thead>
-				<tr>
-					<th>수령인</th>
-					<th>연락처</th>
-					<th>배송지</th>
-					<th>주문일자</th>
-					<th>요구사항</th>
-					<th>결제수단</th>
-					<th>배송상태</th>
-					<th>배송사</th>
-					<th>운송장번호</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>E-복</td>
-					<td>01012311313</td>
-					<td>우편번호 :61738<br>광주 남구 2순환로 1508 (송하동)<br>101동
-						901호
-					</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<th></th>
-					<th></th>
-					<th></th>
-					<th></th>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td colspan="4" align="right"></td>
-				</tr>
-			</tbody>
 		</table>
-	</div>
+		
+	
 	</td></tr></table>
+	
 	<br>
 	<br>
 

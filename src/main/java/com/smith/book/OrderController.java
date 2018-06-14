@@ -160,4 +160,9 @@ public class OrderController {
 		return json;
 	}
 	
+	
+	@RequestMapping(value = "/orderCheck_guest")
+	public String orderCheckGuestForm() {
+		return "/shop/orderCheck_guest";
+	}
 }
